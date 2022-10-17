@@ -1,0 +1,66 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Account Inactive" %}{% endblock %}
+
+{% block content %}
+<h1 style="padding-left: 190px; padding-top: 50px">{% trans "Личный кабинет" %}</h1>
+    <div class="profile_card" style=" display: inline-flex; margin-bottom: 10vh">
+    <div style="display: inline; padding-left: 190px; padding-top: 20px">
+        <p style="color: dimgray; display: inline"; > {% trans "Имя пользователя: " %} <span>{{ user.username }}</span> </p>
+        <br>
+    <p style="color: dimgray; display: inline" > {% trans "Электронная почта: " %} <span>{{ user.email }}</span> </p>
+        <br>
+     {%  if user.userprofile.date_past %}
+    <p style="color: #4C81C9; display: inline" > {% trans "User subscription :" %} <span>{{ user.userprofile.DateSubDie}}</span> </p>
+     {% else %}
+        <!-- <a href="">Оформить подписку</a> -->
+        {% endif %}
+
+        </div>
+  </div>
+
+{% load cart %}
+    {% load custom_filter %}
+    <div class="container">
+        <div class="border rounded p-4 m-4">
+            <p class="display-4 pl-4 ml-4">Ваши заказы</p>
+            <hr>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Картинка</th>
+                    <th>Товар</th>
+                    <th>Дата</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Всего</th>
+                    <th>Статус</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><img style="height: 80px;" class="rounded-circle"
+                                 src="{{ order.product.image.url }}"
+                                 alt=""></td>
+                        <td>{{ order.product.name }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>{{ order.price|currency }}</td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ order.quantity|multiply:order.price|currency }}</td>
+                        {% if order.status %}
+                            <td><small class="badge badge-success">Completed</small></td>
+                        {% else %}
+                            <td><small class="badge badge-warning">Pending</small></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
